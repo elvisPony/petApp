@@ -19,16 +19,13 @@ class creatAccountPage extends StatefulWidget {
   _creatAccountPage createState() => _creatAccountPage();
 }
 
-
-class _creatAccountPage extends State<creatAccountPage>{
-
+class _creatAccountPage extends State<creatAccountPage> {
   final TextEditingController nickName = TextEditingController();
   final TextEditingController accountController = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController checkPassword = TextEditingController();
 
   UserCredential? userCredentials;
-
 
   bool passwordOk = false;
   List<String> error = ["", "", "", ""];
@@ -104,12 +101,26 @@ class _creatAccountPage extends State<creatAccountPage>{
                               ),
                               child: TextButton(
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
                                   primary: Colors.black,
                                   textStyle: const TextStyle(fontSize: 22),
                                 ),
-                                onPressed: () => btnEvent(
-                                  nickName.text, accountController.text, password.text),
+                                onPressed: () {
+                                  String temp;
+                                  temp = validatePassword(password.text);
+                                  if (passwordOk) {
+                                    btnEvent(nickName.text,
+                                        accountController.text, password.text);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                      backgroundColor: Colors.grey,
+                                      msg: temp,
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                    );
+                                  }
+                                },
                                 child: const Text('建立帳號'),
                               ),
                             ),
@@ -124,7 +135,8 @@ class _creatAccountPage extends State<creatAccountPage>{
                               ),
                               child: TextButton(
                                 style: TextButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
                                   primary: Colors.black,
                                   textStyle: const TextStyle(fontSize: 22),
                                 ),
@@ -132,9 +144,7 @@ class _creatAccountPage extends State<creatAccountPage>{
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => LoginPage()
-                                      )
-                                  );
+                                          builder: (context) => LoginPage()));
                                 },
                                 child: const Text('返回'),
                               ),
@@ -165,28 +175,24 @@ class _creatAccountPage extends State<creatAccountPage>{
   }
 
   Future<void> btnEvent(
-      String _username,
-      String _account,
-      String _password,
-      ) async {
-    if (passwordOk == false) return ;
+    String _username,
+    String _account,
+    String _password,
+  ) async {
+    if (passwordOk == false) return;
     try {
       EasyLoading.show(status: 'loading...');
 
       CollectionReference users =
-      FirebaseFirestore.instance.collection('UserInformation');
+          FirebaseFirestore.instance.collection('UserInformation');
       DocumentSnapshot doc = await users.doc(_account).get();
       if (doc.data() != null) {
         return;
       }
       await users
           .doc(_account)
-          .set({
-        "email": _account,
-        "username": _username,
-        "password": _password
-
-      })
+          .set(
+              {"email": _account, "username": _username, "password": _password})
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
       print(_account);
@@ -231,6 +237,4 @@ class _creatAccountPage extends State<creatAccountPage>{
 
     // Navigator.pop(context);
   }
-
 }
-
