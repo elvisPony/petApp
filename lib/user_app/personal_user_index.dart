@@ -7,6 +7,8 @@ import 'package:firebase_test/user_app/news_page.dart';
 import 'package:firebase_test/user_app/my_pet_note.dart';
 import 'package:firebase_test/user_app/pet_cards.dart';
 import 'package:firebase_test/user_app/pet_self_dect.dart';
+import 'package:firebase_test/user_app/modify_account.dart';
+
 
 const primaryColor = Color(0xFFedc96c);
 
@@ -145,7 +147,7 @@ class petIndex extends StatelessWidget {
                             ),
 
                             SizedBox(
-                              height: 100,
+                              height: 10,
                             ),
 
                             // 寵物自我健康檢測
@@ -197,7 +199,7 @@ class petIndex extends StatelessWidget {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>  news_page(
+                                          builder: (context) =>  ModifyAccount(
                                             account: account,
                                              password: password,
                                           )));

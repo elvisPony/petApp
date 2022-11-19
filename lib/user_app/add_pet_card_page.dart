@@ -1,8 +1,10 @@
 // 寵物資料卡新增
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_test/widgets/background-image.dart';
 import 'package:firebase_test/user_app/personal_user_index.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:firebase_test/user_app/pet_cards.dart';
 import 'package:firebase_test/widgets/pet_card.dart';
@@ -63,6 +65,7 @@ class add_pet_card_page extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.navigate_before),
               onPressed: () {
+
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
@@ -76,6 +79,17 @@ class add_pet_card_page extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.check),
                 onPressed: () {
+                  if (petName.text == "")
+                  {
+                    Fluttertoast.showToast(
+                      backgroundColor: Colors.grey,
+                      msg: "名字不為空",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                    );
+                    return;
+                  }
+                  add_pet_card();
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -122,5 +136,35 @@ class add_pet_card_page extends StatelessWidget {
         ),
       ],
     );
+  }
+
+
+
+  Future<void> add_pet_card()async{
+
+    final data = <String, String>{
+      "petName" : petName.text,
+      "petRace" : petRace.text,
+      "petSex" : petSex.text,
+      "petBirthday" : petBirthday.text,
+      "petLength" : petLength.text,
+      "petWeight" : petWeight.text,
+      "remark" : remark.text,
+    };
+    var users =
+    FirebaseFirestore.instance.collection('UserInformation').doc(account);
+    var docSnapshot = await users.get();
+    Map<String, dynamic>? user_data = docSnapshot.data();
+
+    if ( user_data!.keys.toList().contains("pet_card_array") == false)
+      {
+        users.update({"pet_card_array" : [data] });
+      }
+    else {
+      user_data["pet_card_array"].add(data);
+      users.update({"pet_card_array" :user_data["pet_card_array"] });
+    }
+
+
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_test/user_app/personal_user_index.dart';
 import 'package:firebase_test/palatte.dart';
 import 'package:flutter/cupertino.dart';
-
+import 'package:firebase_test/user_app/add_pet_note_page.dart';
 int isLeapYear(int year) {
   if ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0)))
     return 1;
@@ -43,7 +43,7 @@ class pet_remind_note extends StatefulWidget {
     required this.setDay,
     required this.setHour,
     required this.setMinute,
-
+    required this.remind,
 
   }) : super(key: key);
 
@@ -55,6 +55,7 @@ class pet_remind_note extends StatefulWidget {
   final TextEditingController setDay ;
   final TextEditingController setHour ;
   final TextEditingController setMinute ;
+  final RemindBool remind;
 
   @override
   State<pet_remind_note> createState() => _pet_remind_note(
@@ -483,7 +484,7 @@ class _pet_remind_note extends State<pet_remind_note> {
                       children: [
                         Expanded(
                           child: Text(
-                            "開請提醒",
+                            "開起提醒",
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -495,14 +496,14 @@ class _pet_remind_note extends State<pet_remind_note> {
                         Expanded(
                           child:  CupertinoSwitch(
                             // This bool value toggles the switch.
-                            value: remind,
+                            value: widget.remind.remind,
                             //thumbColor: CupertinoColors.systemBlue,
                             //trackColor: CupertinoColors.systemRed.withOpacity(0.14),
                             //activeColor: CupertinoColors.systemRed.withOpacity(0.64),
                             onChanged: (bool? value) {
                               // This is called when the user toggles the switch.
                               setState(() {
-                                remind = value!;
+                                widget.remind.remind = value!;
                               });
                             },
                           ),

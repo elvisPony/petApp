@@ -4,24 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:firebase_test/home_page/login_page.dart';
 import 'package:firebase_test/widgets/password-input.dart';
 import 'package:firebase_test/widgets/text-input.dart';
 import 'package:firebase_test/widgets/background-image.dart';
+import 'package:firebase_test/user_app/personal_user_index.dart';
 
-class creatAccountPage extends StatefulWidget {
-  creatAccountPage({Key? key}) : super(key: key);
+class ModifyAccount extends StatefulWidget {
+  const ModifyAccount({
+  super.key,
+  required this.account,
+  required this.password,
+});
 
+  final String account;
+  final String password;
   @override
-  _creatAccountPage createState() => _creatAccountPage();
+  State<ModifyAccount> createState() => _ModifyAccount();
 }
 
-class _creatAccountPage extends State<creatAccountPage> {
+class _ModifyAccount extends State<ModifyAccount> {
   final TextEditingController nickName = TextEditingController();
-  final TextEditingController accountController = TextEditingController();
   final TextEditingController password = TextEditingController();
   final TextEditingController checkPassword = TextEditingController();
 
@@ -34,7 +39,6 @@ class _creatAccountPage extends State<creatAccountPage> {
   void initState() {
     super.initState();
     nickName.text = "";
-    accountController.text = "";
     password.text = "";
     checkPassword.text = "";
   }
@@ -61,30 +65,24 @@ class _creatAccountPage extends State<creatAccountPage> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             TextInputs(
-                              hint: '帳戶暱稱',
+                              hint: '新的帳戶暱稱',
                               inputType: TextInputType.name,
                               inputAction: TextInputAction.next,
                               controllers: nickName,
                               errorText: error[0],
                             ),
-                            TextInputs(
-                              hint: '電子郵件',
-                              inputType: TextInputType.text,
+
+                            PasswordInput(
+                              hint: '新密碼',
                               inputAction: TextInputAction.next,
-                              controllers: accountController,
+                              controllers: password,
                               errorText: error[1],
                             ),
                             PasswordInput(
-                              hint: '密碼',
-                              inputAction: TextInputAction.next,
-                              controllers: password,
-                              errorText: error[2],
-                            ),
-                            PasswordInput(
-                              hint: '確認密碼',
+                              hint: '再次輸入密碼',
                               inputAction: TextInputAction.none,
                               controllers: checkPassword,
-                              errorText: validatePassword(checkPassword.text),
+                              errorText: error[2],
                             ),
                           ],
                         ),
@@ -107,11 +105,15 @@ class _creatAccountPage extends State<creatAccountPage> {
                                   textStyle: const TextStyle(fontSize: 22),
                                 ),
                                 onPressed: () {
-                                  String temp;
+                                  String temp = "";
                                   temp = validatePassword(checkPassword.text);
+                                  if (nickName.text == ""){
+                                    passwordOk = false;
+                                    temp += "匿名不為空 ";
+                                  }
+
                                   if (passwordOk) {
-                                    btnEvent(nickName.text,
-                                        accountController.text, password.text);
+                                    btnEvent(nickName.text, password.text);
                                   } else {
                                     Fluttertoast.showToast(
                                       backgroundColor: Colors.grey,
@@ -121,11 +123,33 @@ class _creatAccountPage extends State<creatAccountPage> {
                                     );
                                   }
                                 },
-                                child: const Text('建立帳號'),
+                                child: const Text('更新資料'),
                               ),
                             ),
                             SizedBox(
-                              height: 30,
+                              height: 15,
+                            ),
+                            Container(
+                              width: 200,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade600.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  primary: Colors.black,
+                                  textStyle: const TextStyle(fontSize: 22),
+                                ),
+                                onPressed: ()   {
+                                   showAlertDialog(context);
+                                },
+                                child: const Text('刪除帳號'),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 15,
                             ),
                             Container(
                               width: 200,
@@ -144,7 +168,10 @@ class _creatAccountPage extends State<creatAccountPage> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => LoginPage()));
+                                          builder: (context) => petIndex(
+                                            account: widget.account,
+                                            password: widget.password,
+                                          )));
                                 },
                                 child: const Text('返回'),
                               ),
@@ -163,77 +190,83 @@ class _creatAccountPage extends State<creatAccountPage> {
     );
   }
 
-  String validatePassword(String s) {
-    if (password.text != s) {
+  String validatePassword(String s)  {
+
+    if (password.text != s || password.text == "") {
       setState(() {
         passwordOk = false;
       });
-      return "密碼不相同";
+      return "密碼錯誤或為空 ";
     } else
       passwordOk = true;
     return "";
   }
+  showAlertDialog(BuildContext context)  {
+    AlertDialog dialog = AlertDialog(
+      title: const Text("是否刪除帳號"),
+      actions: [
+        ElevatedButton(
+            onPressed: (){
+              deleteAccount();
+              
+              Navigator.pop(context);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LoginPage()));
+            },
+            child: const Text("是")),
+        ElevatedButton(
+            onPressed: (){
+  
+              Navigator.pop(context);
+              },
+            child: const Text("取消")),
+      ],
+    );
+    showDialog(context: context, builder: (BuildContext context){return dialog;});
+  }
+
+  Future<void> deleteAccount()async{
+    var users =
+    FirebaseFirestore.instance.collection('UserInformation');
+    await users.doc(widget.account).delete();
+
+  }
 
   Future<void> btnEvent(
-    String _username,
-    String _account,
-    String _password,
-  ) async {
+      String _username,
+      String _password,
+      ) async {
     if (passwordOk == false) return;
     try {
-      EasyLoading.show(status: 'loading...');
+      //EasyLoading.show(status: 'loading...');
 
       CollectionReference users =
-          FirebaseFirestore.instance.collection('UserInformation');
-      DocumentSnapshot doc = await users.doc(_account).get();
+      FirebaseFirestore.instance.collection('UserInformation');
+      DocumentSnapshot doc = await users.doc(widget.account).get();
       if (doc.data() != null) {
-        return;
+        await users
+            .doc(widget.account)
+            .update(
+            { "username": _username, "password": _password})
+            .catchError((error) => print("Failed to update user: $error"));
       }
-      await users
-          .doc(_account)
-          .set(
-              {"email": _account, "username": _username, "password": _password})
-          .then((value) => print("User Added"))
-          .catchError((error) => print("Failed to add user: $error"));
-      print(_account);
-      print(_password);
-      userCredentials = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: _account, password: _password);
-      User? user = userCredentials?.user;
-      user?.updateDisplayName(_username);
+      return;
+
+
+
     } on FirebaseAuthException catch (e) {
-      EasyLoading.dismiss();
-      if (e.code == 'weak-password') {
-        Fluttertoast.showToast(
-          backgroundColor: Colors.grey,
-          msg: "The password provided is too weak.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-        setState(() {
-          error[2] = 'The password provided is too weak.';
-        });
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        Fluttertoast.showToast(
-          backgroundColor: Colors.grey,
-          msg: "The account already exists for that email.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-        setState(() {
-          error[1] = 'The account already exists for that email.';
-        });
-        print('The account already exists for that email.');
-      }
+      //EasyLoading.dismiss();
+
     } catch (e) {
-      EasyLoading.dismiss();
+      //EasyLoading.dismiss();
       print(e);
     }
-    print(userCredentials);
 
-    EasyLoading.dismiss();
-    Fluttertoast.showToast(msg: "創建帳號成功");
+
+    //EasyLoading.dismiss();
+    Fluttertoast.showToast(msg: "更新資料成功");
 
     // Navigator.pop(context);
   }
