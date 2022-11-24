@@ -61,117 +61,132 @@ class _my_pet_cards extends State<my_pet_cards> {
     return FutureBuilder<DocumentSnapshot>(future: users.get(),
         builder: (BuildContext context,
             AsyncSnapshot<DocumentSnapshot> docSnapshot) {
-          Map<String, dynamic> user_data = docSnapshot.data!.data() as Map<
-              String,
-              dynamic>;
-          List temp;
-          if (all_card.length == 0) {
-            temp = user_data["pet_card_array"];
-            for (var it in temp) {
-              TextEditingController petName = TextEditingController();
-              TextEditingController petRace = TextEditingController();
-              TextEditingController petSex = TextEditingController();
-              TextEditingController petBirthday = TextEditingController();
-              TextEditingController petLength = TextEditingController();
-              TextEditingController petWeight = TextEditingController();
-              TextEditingController remark = TextEditingController();
+      if (docSnapshot.connectionState == ConnectionState.waiting)
+        {
+          print('hi');
+          Widget child;
+          child = CircularProgressIndicator(
+            key: ValueKey(4), // assign key
+          );
+          return AnimatedSwitcher(
+            duration: Duration(seconds: 1),
+            child: child,
+          );
+        }
+      else {
+        Map<String, dynamic> user_data = docSnapshot.data!.data() as Map<
+            String,
+            dynamic>;
+        List temp;
+        if (all_card.length == 0) {
+          temp = user_data["pet_card_array"];
+          for (var it in temp) {
+            TextEditingController petName = TextEditingController();
+            TextEditingController petRace = TextEditingController();
+            TextEditingController petSex = TextEditingController();
+            TextEditingController petBirthday = TextEditingController();
+            TextEditingController petLength = TextEditingController();
+            TextEditingController petWeight = TextEditingController();
+            TextEditingController remark = TextEditingController();
 
-              petName.text = it['petName'];
-              petRace.text = it['petRace'];
-              petSex.text = it['petSex'];
-              petBirthday.text = it['petBirthday'];
-              petLength.text = it['petLength'];
-              petWeight.text = it['petWeight'];
-              remark.text = it['remark'];
+            petName.text = it['petName'];
+            petRace.text = it['petRace'];
+            petSex.text = it['petSex'];
+            petBirthday.text = it['petBirthday'];
+            petLength.text = it['petLength'];
+            petWeight.text = it['petWeight'];
+            remark.text = it['remark'];
 
-              all_card.add(pet_card(
-                petName: petName,
-                petRace: petRace,
-                petSex: petSex,
-                petBirthday: petBirthday,
-                petLength: petLength,
-                petWeight: petWeight,
-                remark: remark,
-              ));
-              all_card.add(const SizedBox(height: 10,
-              ));
-            }
+            all_card.add(pet_card(
+              petName: petName,
+              petRace: petRace,
+              petSex: petSex,
+              petBirthday: petBirthday,
+              petLength: petLength,
+              petWeight: petWeight,
+              remark: remark,
+            ));
+            all_card.add(const SizedBox(height: 10,
+            ));
           }
-          return Stack(
-            children: [
-              BackgroundImage(),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                appBar: AppBar(
-                  backgroundColor: primaryColor,
-                  title: const Text(
-                    "寵物資料卡一覽",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 35,
-                    ),
+        }
+        return Stack(
+          children: [
+            BackgroundImage(),
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              appBar: AppBar(
+                backgroundColor: primaryColor,
+                title: const Text(
+                  "寵物資料卡一覽",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 35,
                   ),
-                  centerTitle: true,
-                  leading: IconButton(
-                    icon: const Icon(Icons.navigate_before),
+                ),
+                centerTitle: true,
+                leading: IconButton(
+                  icon: const Icon(Icons.navigate_before),
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                petIndex(
+                                  account: widget.account,
+                                  password: widget.password,
+                                )));
+                  },
+                ),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.add),
                     onPressed: () {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  petIndex(
+                                  add_pet_card_page(
                                     account: widget.account,
                                     password: widget.password,
                                   )));
                     },
                   ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    add_pet_card_page(
-                                      account: widget.account,
-                                      password: widget.password,
-                                    )));
-                      },
-                    ),
-                  ],
-                ),
-                body: SingleChildScrollView(
-                  child: SafeArea(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
+                ],
+              ),
+              body: SingleChildScrollView(
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Column(
+                          children: [
+                            Column(
+                              children: [
+                                ...all_card
+                              ],
+                            ),
+                          ],
                         ),
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Column(
-                            children: [
-                              Column(
-                                children: [
-                                  ...all_card
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                      ),
 
 
-                      ],
-                    ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          );
+            ),
+          ],
+        );
+      }
         });
   }
+
 
 }

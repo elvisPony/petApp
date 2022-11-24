@@ -7,6 +7,11 @@ import 'package:firebase_test/user_app/add_pet_note_page.dart';
 import 'package:firebase_test/widgets/show_note.dart';
 import 'package:flutter/cupertino.dart';
 
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_test/widgets/noti.dart';
+
+// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+// FlutterLocalNotificationsPlugin();
 
 const primaryColor = Color(0xFFedc96c);
 
@@ -41,7 +46,7 @@ class _my_pet_note extends State<my_pet_note> {
   // required this.account,
   // required this.password,
   // });
-
+  late final LocalNotificationService service;
   List all_note = <Widget>[] ;
 
   String petNameControllers= '';
@@ -57,8 +62,11 @@ class _my_pet_note extends State<my_pet_note> {
   @override
   void initState()  {
     // TODO: implement setState
+    service = LocalNotificationService();
+    service.intialize();
     super.initState();
-
+    print('init');
+  // Noti.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
@@ -67,10 +75,21 @@ class _my_pet_note extends State<my_pet_note> {
 
     return FutureBuilder<DocumentSnapshot>(future: users.get() ,
         builder: (BuildContext  context, AsyncSnapshot<DocumentSnapshot> docSnapshot ){
+          if (docSnapshot.connectionState == ConnectionState.waiting)
+          {
+            Widget child;
+            child = CircularProgressIndicator(
+              key: ValueKey(4), // assign key
+            );
+            return AnimatedSwitcher(
+              duration: Duration(seconds: 1),
+              child: child,
+            );
+          }
           Map<String, dynamic> user_data = docSnapshot.data!.data() as Map<String, dynamic> ;
           List temp;
           all_note = <Widget>[];
-          if ( user_data!.keys.toList().contains("pet_note_array") == false)
+          if ( user_data.keys.toList().contains("pet_note_array") == false)
           {
 
           }
@@ -185,7 +204,7 @@ class _my_pet_note extends State<my_pet_note> {
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 35,
+                      fontSize: 29,
                     ),
                   ),
                   centerTitle: true,
@@ -202,6 +221,9 @@ class _my_pet_note extends State<my_pet_note> {
                     },
                   ),
                   actions: [
+                    IconButton(onPressed:  ()async{
+                      await service.showNotification(id: 0, title: '提醒事項', body: 'XXX 寵物打針');
+                    }, icon: const Icon(Icons.access_alarm)),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
