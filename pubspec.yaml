@@ -30,9 +30,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cloud_firestore: any
-  google_sign_in: any
-  firebase_auth: any
+  cloud_firestore: ^4.2.0
+  google_sign_in: ^5.4.2
+  firebase_auth: ^4.2.0
   firebase_core: any
   font_awesome_flutter: any
   flutter_easyloading: any
@@ -47,6 +47,12 @@ dependencies:
   flutter_local_notifications: ^9.6.0
   timezone: any
   rxdart: any
+  path_provider: ^2.0.11
+  #  camerawesome: ^0.3.3
+  #  better_open_file: ^3.6.4
+  image: ^3.2.2
+  permission_handler: ^10.2.0
+  camera: ^0.9.3+1
 
 dev_dependencies:
   flutter_test:

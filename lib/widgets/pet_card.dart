@@ -1,14 +1,16 @@
 // 資料卡介面
 
-import 'package:flutter/material.dart';
-import 'package:firebase_test/user_app/personal_user_index.dart';
+import 'dart:io';
+
+import 'package:camera/camera.dart';
 import 'package:firebase_test/palatte.dart';
-import 'package:flutter/cupertino.dart';
-
-
+import 'package:firebase_test/widgets/SimpleCamera.dart';
+import 'package:flutter/material.dart';
+import 'package:path/path.dart' show join;
+import 'package:path_provider/path_provider.dart';
 
 class pet_card extends StatefulWidget {
-   const pet_card({
+  const pet_card({
     Key? key,
     required this.petName,
     required this.petRace,
@@ -17,7 +19,6 @@ class pet_card extends StatefulWidget {
     required this.petLength,
     required this.petWeight,
     required this.remark,
-
   }) : super(key: key);
 
   final TextEditingController petName;
@@ -30,14 +31,14 @@ class pet_card extends StatefulWidget {
 
   @override
   State<pet_card> createState() => _pet_card(
-    petName: petName,
-    petRace: petRace,
-    petSex: petSex,
-    petBirthday: petBirthday,
-    petLength: petLength,
-    petWeight: petWeight,
-    remark: remark,
-  );
+        petName: petName,
+        petRace: petRace,
+        petSex: petSex,
+        petBirthday: petBirthday,
+        petLength: petLength,
+        petWeight: petWeight,
+        remark: remark,
+      );
 }
 
 class _pet_card extends State<pet_card> {
@@ -60,17 +61,23 @@ class _pet_card extends State<pet_card> {
   final TextEditingController petWeight;
   final TextEditingController remark;
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
-
+    void openCamera(BuildContext context) async {
+      final cameras = await availableCameras();
+      Navigator.push(
+        this.context,
+        MaterialPageRoute(
+          builder: (context) => SimpleCamera(
+            camera: cameras.first,
+            petName: widget.petName.text,
+          ),
+        ),
+      );
+    }
 
     return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width / 20),
+      margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 20),
       child: Column(
         children: <Widget>[
           //名字欄
@@ -82,20 +89,27 @@ class _pet_card extends State<pet_card> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      //color: Colors.white,
-                      width: MediaQuery.of(context).size.width * 1 / 4,
-                      height: MediaQuery.of(context).size.height * 2 / 23,
-                      // pet image
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.yellow.shade300,
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/img_cat1.png'),
-                          fit: BoxFit.scaleDown,
-                        ),
-                      ),
+                    FutureBuilder<Image>(
+                      future: _getAvatar(),
+                      builder: (context, snapshot) {
+                        return InkWell(
+                          onTap: () {
+                            openCamera(context);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            //color: Colors.white,
+                            width: MediaQuery.of(context).size.width * 1 / 4,
+                            height: MediaQuery.of(context).size.height * 2 / 23,
+                            // pet image
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.yellow.shade300,
+                            ),
+                            child: ClipOval(child: snapshot.data),
+                          ),
+                        );
+                      },
                     ),
                     Container(
                       child: SizedBox(
@@ -134,10 +148,9 @@ class _pet_card extends State<pet_card> {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 8 / 10,
                         height: MediaQuery.of(context).size.height * 1 / 15,
-
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "",
                             hintStyle: kBodyText,
@@ -165,7 +178,7 @@ class _pet_card extends State<pet_card> {
                         height: MediaQuery.of(context).size.height * 1 / 15,
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "",
                             hintStyle: kBodyText,
@@ -193,7 +206,7 @@ class _pet_card extends State<pet_card> {
                         height: MediaQuery.of(context).size.height * 1 / 15,
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "",
                             hintStyle: kBodyText,
@@ -221,7 +234,7 @@ class _pet_card extends State<pet_card> {
                         height: MediaQuery.of(context).size.height * 1 / 15,
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "",
                             hintStyle: kBodyText,
@@ -249,7 +262,7 @@ class _pet_card extends State<pet_card> {
                         height: MediaQuery.of(context).size.height * 1 / 15,
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "",
                             hintStyle: kBodyText,
@@ -276,7 +289,7 @@ class _pet_card extends State<pet_card> {
                         height: MediaQuery.of(context).size.height * 1 / 15,
                         child: TextField(
                           decoration: const InputDecoration(
-                            contentPadding:  const EdgeInsets.symmetric(horizontal: 20),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20),
                             border: InputBorder.none,
                             hintText: "備註",
                             hintStyle: kBodyText,
@@ -290,16 +303,33 @@ class _pet_card extends State<pet_card> {
                       color: Colors.grey.shade400,
                     ),
                   ),
-
-
                 ],
               ),
             ),
           ),
         ],
       ),
-
-
     );
+  }
+
+  Future<Image> _getAvatar() async {
+    final path = join(
+      // Store the picture in the temp directory.
+      // Find the temp directory using the `path_provider` plugin.
+      (await getApplicationDocumentsDirectory()).path,
+      '${widget.petName.text}.png',
+    );
+
+    print("get file from: $path");
+
+    return await (File(path).exists())
+        ? Image.file(
+            File(path),
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            'assets/images/img_cat1.png',
+            fit: BoxFit.cover,
+          );
   }
 }

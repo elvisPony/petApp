@@ -2,38 +2,31 @@
 
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-import 'package:firebase_test/widgets/text-input.dart';
-import 'package:firebase_test/widgets/password-input.dart';
-import 'package:firebase_test/widgets/background-image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_test/home_page/creatAccount.dart';
 import 'package:firebase_test/home_page/user_start_page.dart';
-
-
-
-
-
-
+import 'package:firebase_test/widgets/background-image.dart';
+import 'package:firebase_test/widgets/password-input.dart';
+import 'package:firebase_test/widgets/text-input.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 // -----------------------------------------
 
 class LoginPage extends StatelessWidget {
-
   UserCredential? userCredential;
   final TextEditingController accountController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-
-
   void initState() {
     accountController.text = "";
     passwordController.text = "";
+
+    _askPermission();
   }
 
   @override
@@ -181,20 +174,26 @@ class LoginPage extends StatelessWidget {
       Map<String, dynamic> password = password_data.data() as Map<String, dynamic> ;
       print(  password['password']  );
       if (password['password'] != text2) {
-        Fluttertoast.showToast(
-          backgroundColor: Colors.grey,
-          msg: "Wrong password provided for that user.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
+      Fluttertoast.showToast(
+        backgroundColor: Colors.grey,
+        msg: "Wrong password provided for that user.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+      );
 
-        print('Wrong password provided for that user.');
-        return false;
-      }
+      print('Wrong password provided for that user.');
+      return false;
+    }
 
     print('success');
     return true;
+  }
 
+  Future<void> _askPermission() async {
+    await [
+      Permission.camera,
+      Permission.storage,
+    ].request();
   }
 }
 
