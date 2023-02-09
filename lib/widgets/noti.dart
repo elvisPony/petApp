@@ -8,9 +8,10 @@ class LocalNotificationService {
 
   final _localNotificationService = FlutterLocalNotificationsPlugin();
 
-
+  final BehaviorSubject<String?> onNotificationClick = BehaviorSubject();
 
   Future<void> intialize() async {
+    tz.initializeTimeZones();
     const AndroidInitializationSettings androidInitializationSettings =
     AndroidInitializationSettings('@drawable/ic_stat_alarm');
 
@@ -49,13 +50,34 @@ class LocalNotificationService {
     );
   }
 
-  Future<void> showNotification({
+  Future<void> showNotificationWithPayload({
     required int id,
     required String title,
     required String body,
+    required String payload,
   }) async{
     final details = await _notificationDetails();
-    await _localNotificationService.show(id,title,body, details);
+    await _localNotificationService.show(id,title,body, details, payload: payload);
+  }
+
+  Future<void> showScheduleNotification(
+      {required int id,
+        required String title,
+        required String body,
+        required int days,
+        required int hours,
+        required int minutes,
+    }) async{
+    final details = await _notificationDetails();
+    await _localNotificationService.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(DateTime.now().add(Duration(days: days, hours: hours, minutes: minutes)), tz.local,),
+        details,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        );
   }
 
   void _onDidReceiveLocalNotification(
@@ -65,6 +87,9 @@ class LocalNotificationService {
   }
   void onSelectNotification(String? payload){
     print('payload $payload');
+    if (payload != null && payload.isNotEmpty){
+      onNotificationClick.add(payload);
+    }
   }
 
 }

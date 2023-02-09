@@ -1,6 +1,7 @@
 // 新增提醒事項
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_test/user_app/add_pet_card_page.dart';
 import 'package:firebase_test/user_app/my_pet_note.dart';
 
 import 'package:flutter/material.dart';
@@ -9,7 +10,8 @@ import 'package:firebase_test/user_app/personal_user_index.dart';
 import 'package:firebase_test/widgets/news_wall.dart';
 import 'package:firebase_test/widgets/pet_remind_note.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:firebase_test/widgets/noti.dart';
+import 'package:firebase_test/widgets/second_screen.dart';
 class RemindBool{
   bool remind;
   RemindBool(this.remind);
@@ -18,10 +20,24 @@ class RemindBool{
 
 const primaryColor = Color(0xFFedc96c);
 
-class add_pet_note_page extends StatelessWidget {
-  final String account;
 
+class add_pet_note_page extends StatefulWidget{
+  final String account;
   final String password;
+
+  const add_pet_note_page({
+  super.key,
+  required this.account,
+  required this.password,
+});
+  @override
+  State<add_pet_note_page> createState() => _add_pet_note_page();
+}
+
+
+class _add_pet_note_page extends State<add_pet_note_page> {
+
+  late final LocalNotificationService service;
 
   final TextEditingController petName = TextEditingController();
   final TextEditingController doingThing = TextEditingController();
@@ -34,12 +50,12 @@ class add_pet_note_page extends StatelessWidget {
    TextEditingController setMinute =  TextEditingController();
    RemindBool remind = RemindBool(false);
 
-  add_pet_note_page({super.key,
-  required this.account,
-  required this.password,
-  });
 
+  @override
   void initState() {
+    service = LocalNotificationService();
+    service.intialize();
+    listenToNotification();
     petName.text = "";
     doingThing.text = "";
     remark.text = "";
@@ -48,12 +64,14 @@ class add_pet_note_page extends StatelessWidget {
     setDay.text = "";
     setHour.text = "";
     setMinute.text = "";
+    super.initState();
   }
+
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    initState();
+
     return Stack(
       children: [
         BackgroundImage(),
@@ -77,8 +95,8 @@ class add_pet_note_page extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => my_pet_note(
-                              account: account,
-                              password: password,
+                              account: widget.account,
+                              password: widget.password,
                             )));
               },
             ),
@@ -100,12 +118,40 @@ class add_pet_note_page extends StatelessWidget {
 
 
                   await btnEvent();
+                  // 鬧鐘設定時間
+                  if(remind.remind){
+                    var nowTime = DateTime.now();
+                    nowTime = DateTime.utc(
+                        nowTime.year,
+                        nowTime.month,
+                        nowTime.day,
+                        nowTime.hour,
+                        nowTime.minute
+                    );
+                    var settingTime = DateTime.utc(
+                        int.parse(setYear.text)+1911,
+                        int.parse(setMonth.text),
+                        int.parse(setDay.text),
+                        int.parse(setHour.text),
+                        int.parse(setMinute.text),
+                        0);
+
+                    await service.showScheduleNotification(
+                      id: 0,
+                      title: petName.text,
+                      body: doingThing.text,
+                      days: 0,
+                      hours: 0,
+                      minutes: settingTime.difference(nowTime).inMinutes,
+                    );
+                  }
+
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (context) => my_pet_note(
-                                account: account,
-                                password: password,
+                                account: widget.account,
+                                password: widget.password,
                               )));
                 },
               ),
@@ -175,7 +221,7 @@ class add_pet_note_page extends StatelessWidget {
       //EasyLoading.show(status: 'loading...');
 
       var users =
-      FirebaseFirestore.instance.collection('UserInformation').doc(account);
+      FirebaseFirestore.instance.collection('UserInformation').doc(widget.account);
       var docSnapshot = await users.get();
       Map<String, dynamic>? user_data = docSnapshot.data();
 
@@ -203,6 +249,19 @@ class add_pet_note_page extends StatelessWidget {
     Fluttertoast.showToast(msg: "更新資料成功");
 
     // Navigator.pop(context);
+  }
+  void listenToNotification() =>
+      service.onNotificationClick.stream.listen(onNoticationListener);
+
+  void onNoticationListener(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      print('payload $payload');
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: ((context) => SecondScreen(payload: payload))));
+    }
   }
 
 }

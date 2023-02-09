@@ -1,14 +1,15 @@
 // 目錄
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_test/widgets/second_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_test/widgets/background-image.dart';
 import 'package:firebase_test/user_app/personal_user_index.dart';
 import 'package:firebase_test/user_app/add_pet_note_page.dart';
-import 'package:firebase_test/widgets/show_note.dart';
+
 import 'package:flutter/cupertino.dart';
 
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_test/widgets/noti.dart';
+
 
 // final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 // FlutterLocalNotificationsPlugin();
@@ -18,23 +19,22 @@ const primaryColor = Color(0xFFedc96c);
 
 class my_pet_note extends StatefulWidget {
 
-  final String account ;
-  final String password ;
+  final String account;
 
-  const my_pet_note({
-    super.key,
-    required this.account,
-    required this.password,
-});
+  final String password;
 
+  const my_pet_note
+
+  ({
+  super.key,
+  required this.account,
+  required this.password,
+  });
 
 
   @override
   State<my_pet_note> createState() => _my_pet_note();
 }
-
-
-
 
 
 class _my_pet_note extends State<my_pet_note> {
@@ -47,36 +47,38 @@ class _my_pet_note extends State<my_pet_note> {
   // required this.password,
   // });
   late final LocalNotificationService service;
-  List all_note = <Widget>[] ;
+  List all_note = <Widget>[];
 
-  String petNameControllers= '';
+  String petNameControllers = '';
   String doingThingsControllers = '';
-  String remark= '';
-  String setYear ='';
+  String remark = '';
+  String setYear = '';
   String setMonth = '';
   String setDay = '';
   String setHour = '';
-  String setMinute ='';
+  String setMinute = '';
   bool remind = false;
 
   @override
-  void initState()  {
+  void initState() {
     // TODO: implement setState
     service = LocalNotificationService();
     service.intialize();
+    listenToNotification();
     super.initState();
     print('init');
-  // Noti.initialize(flutterLocalNotificationsPlugin);
+    // Noti.initialize(flutterLocalNotificationsPlugin);
   }
 
   @override
-  Widget build(BuildContext context)  {
-    var users = FirebaseFirestore.instance.collection('UserInformation').doc(widget.account);
+  Widget build(BuildContext context) {
+    var users = FirebaseFirestore.instance.collection('UserInformation').doc(
+        widget.account);
 
-    return FutureBuilder<DocumentSnapshot>(future: users.get() ,
-        builder: (BuildContext  context, AsyncSnapshot<DocumentSnapshot> docSnapshot ){
-          if (docSnapshot.connectionState == ConnectionState.waiting)
-          {
+    return FutureBuilder<DocumentSnapshot>(future: users.get(),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot> docSnapshot) {
+          if (docSnapshot.connectionState == ConnectionState.waiting) {
             Widget child;
             child = CircularProgressIndicator(
               key: ValueKey(4), // assign key
@@ -86,16 +88,17 @@ class _my_pet_note extends State<my_pet_note> {
               child: child,
             );
           }
-          Map<String, dynamic> user_data = docSnapshot.data!.data() as Map<String, dynamic> ;
+          Map<String, dynamic> user_data = docSnapshot.data!.data() as Map<
+              String,
+              dynamic>;
           List temp;
           all_note = <Widget>[];
-          if ( user_data.keys.toList().contains("pet_note_array") == false)
-          {
+          if (user_data.keys.toList().contains("pet_note_array") == false) {
 
           }
-          else{
+          else {
             temp = user_data["pet_note_array"];
-            for (var it in temp ){
+            for (var it in temp) {
               petNameControllers = it['petName'];
               doingThingsControllers = it['doingThing'];
               remark = it['remark'];
@@ -107,7 +110,10 @@ class _my_pet_note extends State<my_pet_note> {
               remind = it['remind'] == 'true';
               all_note.add(Container(
                 margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.of(context).size.width  / 100),
+                    horizontal: MediaQuery
+                        .of(context)
+                        .size
+                        .width / 100),
                 child: Column(
                   children: <Widget>[
                     //名字欄
@@ -122,28 +128,43 @@ class _my_pet_note extends State<my_pet_note> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10),
                                 //color: Colors.white,
-                                width: MediaQuery.of(context).size.width * 1 / 4,
-                                height: MediaQuery.of(context).size.height * 2 / 23,
+                                width: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 1 / 4,
+                                height: MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height * 2 / 23,
                                 // pet image
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Colors.yellow.shade300,
                                   image: DecorationImage(
-                                    image: AssetImage('assets/images/img_cat1.png'),
+                                    image: AssetImage(
+                                        'assets/images/img_cat1.png'),
                                     fit: BoxFit.scaleDown,
                                   ),
                                 ),
                               ),
                               Container(
                                 child: SizedBox(
-                                  width: MediaQuery.of(context).size.width / 3,
-                                  height: MediaQuery.of(context).size.height * 2 / 19,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width / 3,
+                                  height: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .height * 2 / 19,
                                   child: Text(petNameControllers,
                                       textAlign: TextAlign.center,
-                                    style: TextStyle(fontWeight: FontWeight.bold,
-                                      fontSize:40 )),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 40)),
                                 ),
                               ),
                             ],
@@ -161,10 +182,12 @@ class _my_pet_note extends State<my_pet_note> {
                         child: Row(
                           children: [
                             Expanded(
-                                child: Text(setYear +"/" + setMonth +"/"+ setDay +" " + doingThingsControllers )
+                                child: Text(
+                                    setYear + "/" + setMonth + "/" + setDay +
+                                        " " + doingThingsControllers)
                             ),
                             Expanded(
-                              child:  CupertinoSwitch(
+                              child: CupertinoSwitch(
                                 // This bool value toggles the switch.
                                 value: remind,
                                 //thumbColor: CupertinoColors.systemBlue,
@@ -192,7 +215,7 @@ class _my_pet_note extends State<my_pet_note> {
               ));
             }
           }
-          return   Stack(
+          return Stack(
             children: [
               BackgroundImage(),
               Scaffold(
@@ -214,26 +237,25 @@ class _my_pet_note extends State<my_pet_note> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>  petIndex(
-                                account: widget.account,
-                                password: widget.password,
-                              )));
+                              builder: (context) =>
+                                  petIndex(
+                                    account: widget.account,
+                                    password: widget.password,
+                                  )));
                     },
                   ),
                   actions: [
-                    IconButton(onPressed:  ()async{
-                      await service.showNotification(id: 0, title: '提醒事項', body: 'XXX 寵物打針');
-                    }, icon: const Icon(Icons.access_alarm)),
                     IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: () {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>  add_pet_note_page(
-                                  account: widget.account,
-                                  password: widget.password,
-                                )));
+                                builder: (context) =>
+                                    add_pet_note_page(
+                                      account: widget.account,
+                                      password: widget.password,
+                                    )));
                       },
                     ),
                   ],
@@ -260,7 +282,6 @@ class _my_pet_note extends State<my_pet_note> {
                         ),
 
 
-
                       ],
                     ),
                   ),
@@ -268,26 +289,24 @@ class _my_pet_note extends State<my_pet_note> {
               ),
             ],
           );
-        } );
-
-
+        });
   }
 
 
-  Future<void> get_pet_card()async{
+  Future<void> get_pet_card() async {
     //print("hi");
     List temp;
     var users =
-    FirebaseFirestore.instance.collection('UserInformation').doc(widget.account);
+    FirebaseFirestore.instance.collection('UserInformation').doc(
+        widget.account);
     var docSnapshot = await users.get();
     Map<String, dynamic>? user_data = docSnapshot.data();
-    if ( user_data!.keys.toList().contains("pet_note_array") == false)
-    {
+    if (user_data!.keys.toList().contains("pet_note_array") == false) {
       return;
     }
-    else{
+    else {
       temp = user_data["pet_note_array"];
-      for (var it in temp ){
+      for (var it in temp) {
         print(it);
         petNameControllers = it['petName'];
         doingThingsControllers = it['doingThing'];
@@ -300,7 +319,10 @@ class _my_pet_note extends State<my_pet_note> {
         remind = it['remind'] == 'true';
         all_note.add(Container(
           margin: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width / 20),
+              horizontal: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 20),
           child: Column(
             children: <Widget>[
               //名字欄
@@ -315,8 +337,14 @@ class _my_pet_note extends State<my_pet_note> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           //color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 1 / 4,
-                          height: MediaQuery.of(context).size.height * 2 / 23,
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width * 1 / 4,
+                          height: MediaQuery
+                              .of(context)
+                              .size
+                              .height * 2 / 23,
                           // pet image
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
@@ -329,8 +357,14 @@ class _my_pet_note extends State<my_pet_note> {
                         ),
                         Container(
                           child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 3,
-                            height: MediaQuery.of(context).size.height * 2 / 19,
+                            width: MediaQuery
+                                .of(context)
+                                .size
+                                .width / 3,
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height * 2 / 19,
                             child: Text(petNameControllers),
                           ),
                         ),
@@ -349,10 +383,11 @@ class _my_pet_note extends State<my_pet_note> {
                   child: Row(
                     children: [
                       Expanded(
-                          child: Text(setYear +"/" + setMonth +"/"+ setDay +" " + doingThingsControllers )
+                          child: Text(setYear + "/" + setMonth + "/" + setDay +
+                              " " + doingThingsControllers)
                       ),
                       Expanded(
-                        child:  CupertinoSwitch(
+                        child: CupertinoSwitch(
                           // This bool value toggles the switch.
                           value: remind,
                           //thumbColor: CupertinoColors.systemBlue,
@@ -385,10 +420,13 @@ class _my_pet_note extends State<my_pet_note> {
   }
 
 
-  Widget element(BuildContext context){
+  Widget element(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: MediaQuery.of(context).size.width / 20),
+          horizontal: MediaQuery
+              .of(context)
+              .size
+              .width / 20),
       child: Column(
         children: <Widget>[
           //名字欄
@@ -403,8 +441,14 @@ class _my_pet_note extends State<my_pet_note> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       //color: Colors.white,
-                      width: MediaQuery.of(context).size.width * 1 / 4,
-                      height: MediaQuery.of(context).size.height * 2 / 23,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width * 1 / 4,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * 2 / 23,
                       // pet image
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
@@ -417,8 +461,14 @@ class _my_pet_note extends State<my_pet_note> {
                     ),
                     Container(
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width / 3,
-                        height: MediaQuery.of(context).size.height * 2 / 19,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .width / 3,
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height * 2 / 19,
                         child: Text(petNameControllers),
                       ),
                     ),
@@ -437,10 +487,12 @@ class _my_pet_note extends State<my_pet_note> {
               child: Row(
                 children: [
                   Expanded(
-                      child: Text(setYear +"/" + setMonth +"/"+ setDay +" " + doingThingsControllers )
+                      child: Text(
+                          setYear + "/" + setMonth + "/" + setDay + " " +
+                              doingThingsControllers)
                   ),
                   Expanded(
-                    child:  CupertinoSwitch(
+                    child: CupertinoSwitch(
                       // This bool value toggles the switch.
                       value: remind,
                       //thumbColor: CupertinoColors.systemBlue,
@@ -463,6 +515,20 @@ class _my_pet_note extends State<my_pet_note> {
 
 
     );
+  }
+
+  void listenToNotification() =>
+      service.onNotificationClick.stream.listen(onNoticationListener);
+
+  void onNoticationListener(String? payload) {
+    if (payload != null && payload.isNotEmpty) {
+      print('payload $payload');
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: ((context) => SecondScreen(payload: payload))));
+    }
   }
 }
 
