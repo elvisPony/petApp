@@ -130,7 +130,7 @@ class _creatAccountPage extends State<creatAccountPage> {
                             Container(
                               width: 200,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade600.withOpacity(0.5),
+                                color: Colors.blue,//Colors.grey.shade600.withOpacity(0.5)
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: TextButton(
