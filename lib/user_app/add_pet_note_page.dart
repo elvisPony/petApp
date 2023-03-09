@@ -12,6 +12,7 @@ import 'package:firebase_test/widgets/pet_remind_note.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_test/widgets/noti.dart';
 import 'package:firebase_test/widgets/second_screen.dart';
+import 'dart:async';
 class RemindBool{
   bool remind;
   RemindBool(this.remind);
@@ -38,7 +39,7 @@ class add_pet_note_page extends StatefulWidget{
 class _add_pet_note_page extends State<add_pet_note_page> {
 
   late final LocalNotificationService service;
-
+  //final VoidCallback deleteNote = (){};
   final TextEditingController petName = TextEditingController();
   final TextEditingController doingThing = TextEditingController();
   final TextEditingController remark = TextEditingController();
@@ -119,23 +120,22 @@ class _add_pet_note_page extends State<add_pet_note_page> {
 
                   await btnEvent();
                   // 鬧鐘設定時間
+                  var nowTime = DateTime.now();
+                  nowTime = DateTime.utc(
+                      nowTime.year,
+                      nowTime.month,
+                      nowTime.day,
+                      nowTime.hour,
+                      nowTime.minute
+                  );
+                  var settingTime = DateTime.utc(
+                      int.parse(setYear.text)+1911,
+                      int.parse(setMonth.text),
+                      int.parse(setDay.text),
+                      int.parse(setHour.text),
+                      int.parse(setMinute.text),
+                      0);
                   if(remind.remind){
-                    var nowTime = DateTime.now();
-                    nowTime = DateTime.utc(
-                        nowTime.year,
-                        nowTime.month,
-                        nowTime.day,
-                        nowTime.hour,
-                        nowTime.minute
-                    );
-                    var settingTime = DateTime.utc(
-                        int.parse(setYear.text)+1911,
-                        int.parse(setMonth.text),
-                        int.parse(setDay.text),
-                        int.parse(setHour.text),
-                        int.parse(setMinute.text),
-                        0);
-
                     await service.showScheduleNotification(
                       id: 0,
                       title: petName.text,
@@ -145,6 +145,11 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                       minutes: settingTime.difference(nowTime).inMinutes,
                     );
                   }
+                  print("剩餘時間 : "+ settingTime.difference(nowTime).inMinutes.toString());
+                  //deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);
+                  Timer(Duration(minutes: settingTime.difference(nowTime).inMinutes),
+                          () {deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);}
+                  );
 
                   Navigator.pushReplacement(
                       context,
@@ -198,11 +203,42 @@ class _add_pet_note_page extends State<add_pet_note_page> {
   }
 
   bool nameIsEmpty()  {
-    print(petName.text);
+    //print(petName.text);
     if (petName.text  == "") {
       return true;
     }
     return false;
+  }
+
+  void deleteNote(String year, String month, String day, String hour,String minute) async{
+    print('try to delete');
+    try {
+      var users =
+      FirebaseFirestore.instance.collection('UserInformation').doc(
+          widget.account);
+      var docSnapshot = await users.get();
+      Map<String, dynamic>? user_data = docSnapshot.data();
+      if (user_data!.keys.toList().contains("pet_note_array") == true) {
+        for (int i = user_data["pet_note_array"].length -1 ;i>= 0; i--) {
+          if (user_data["pet_note_array"][i]["setYear"] == year &&
+              user_data["pet_note_array"][i]["setMonth"] == month &&
+              user_data["pet_note_array"][i]["setDay"] == day &&
+              user_data["pet_note_array"][i]["setHour"] == hour &&
+              user_data["pet_note_array"][i]["setMinute"] == minute ) {
+            user_data["pet_note_array"].removeAt(i);
+            //print(i.toString()+ ' index');
+          }
+        }
+        users.update({"pet_note_array": user_data["pet_note_array"]});
+      }
+    }on FirebaseAuthException catch (e) {
+      //EasyLoading.dismiss();
+
+    } catch (e) {
+      //EasyLoading.dismiss();
+      print(e);
+    }
+
   }
 
   Future<void> btnEvent() async {

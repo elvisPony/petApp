@@ -156,11 +156,11 @@ class _pet_remind_note extends State<pet_remind_note> {
 
   @override
   Widget build(BuildContext context) {
-    print(yearDropDownValue);
-    print(monthDropDownValue);
-    print(dayDropDownValue);
-    print(hoursDropDownValue);
-    print(minuteDropDownValue);
+    //print(yearDropDownValue);
+    //print(monthDropDownValue);
+    //print(dayDropDownValue);
+    //print(hoursDropDownValue);
+    //print(minuteDropDownValue);
     put_set_time();
     return Container(
       margin: EdgeInsets.symmetric(
