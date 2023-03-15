@@ -76,7 +76,7 @@ class LoginPage extends StatelessWidget {
                             Container(
                               width: 200,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade600.withOpacity(0.5),
+                                color: Colors.blue,//Colors.grey.shade600.withOpacity(0.5)
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: TextButton(
@@ -108,7 +108,7 @@ class LoginPage extends StatelessWidget {
                             Container(
                               width: 200,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade600.withOpacity(0.5),
+                                color: Colors.blue, //Colors.grey.shade600.withOpacity(0.5)
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: TextButton(

@@ -63,7 +63,7 @@ class user_start_page extends StatelessWidget {
                             Container(
                               width:  MediaQuery.of(context).size.width ,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade600.withOpacity(0.5),
+                                color: Colors.blue, // Colors.grey.shade600.withOpacity(0.5)
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: TextButton(
@@ -92,7 +92,7 @@ class user_start_page extends StatelessWidget {
                             Container(
                               width: MediaQuery.of(context).size.width,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade600.withOpacity(0.5),
+                                color: Colors.blue,//Colors.grey.shade600.withOpacity(0.5)
                                 borderRadius: BorderRadius.circular(16),
                               ),
                               child: TextButton(
