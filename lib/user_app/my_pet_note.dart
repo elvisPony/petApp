@@ -184,7 +184,7 @@ class _my_pet_note extends State<my_pet_note> {
                             Expanded(
                                 child: Text(
                                     setYear + "/" + setMonth + "/" + setDay +
-                                        " " + doingThingsControllers)
+                                        " " +setHour+":"+setMinute +"  "+ doingThingsControllers)
                             ),
                             Expanded(
                               child: CupertinoSwitch(
