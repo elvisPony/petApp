@@ -8,6 +8,7 @@ import 'package:firebase_test/user_app/my_pet_note.dart';
 import 'package:firebase_test/user_app/pet_cards.dart';
 import 'package:firebase_test/user_app/pet_self_dect.dart';
 import 'package:firebase_test/user_app/modify_account.dart';
+import 'package:firebase_test/home_page/login_page.dart';
 
 
 const primaryColor = Color(0xFFedc96c);
@@ -205,6 +206,50 @@ class petIndex extends StatelessWidget {
                                           )));
                                 },
                                 child: const Text('帳戶資料更改'),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 10,
+                            ),
+                            // 帳戶資料更改
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  primary: Colors.black,
+                                  textStyle: const TextStyle(fontSize: 22),
+                                ),
+                                onPressed: () =>showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: const Text('確認是否登出'),
+                                    content: const Text(''),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, '取消'),
+                                        child: const Text('取消'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                        builder: (context) =>  LoginPage(
+                                        )));
+                                          },
+                                        child: const Text('登出'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                child: const Text('登出'),
                               ),
                             ),
 
