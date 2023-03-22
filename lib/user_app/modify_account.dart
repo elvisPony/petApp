@@ -251,7 +251,9 @@ class _ModifyAccount extends State<ModifyAccount> {
             .update(
             { "username": _username, "password": _password})
             .catchError((error) => print("Failed to update user: $error"));
+        Fluttertoast.showToast(msg: "更新成功");
       }
+
       return;
 
 

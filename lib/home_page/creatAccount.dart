@@ -109,6 +109,7 @@ class _creatAccountPage extends State<creatAccountPage> {
                                 onPressed: () {
                                   String temp;
                                   temp = validatePassword(checkPassword.text);
+                                  print("debug : " + passwordOk.toString());
                                   if (passwordOk) {
                                     btnEvent(nickName.text,
                                         accountController.text, password.text);
@@ -179,14 +180,23 @@ class _creatAccountPage extends State<creatAccountPage> {
     String _account,
     String _password,
   ) async {
+
     if (passwordOk == false) return;
     try {
-      EasyLoading.show(status: 'loading...');
+      //EasyLoading.show(status: 'loading...');
 
       CollectionReference users =
           FirebaseFirestore.instance.collection('UserInformation');
       DocumentSnapshot doc = await users.doc(_account).get();
+
       if (doc.data() != null) {
+        Fluttertoast.showToast(msg: "這個信箱已被使用，請用其他信箱嘗試");
+        // Fluttertoast.showToast(
+        //   backgroundColor: Colors.grey,
+        //   msg: "信箱已使用，請用其他信箱嘗試",
+        //   toastLength: Toast.LENGTH_SHORT,
+        //   gravity: ToastGravity.CENTER,
+        // );
         return;
       }
       await users
@@ -195,6 +205,7 @@ class _creatAccountPage extends State<creatAccountPage> {
               {"email": _account, "username": _username, "password": _password})
           .then((value) => print("User Added"))
           .catchError((error) => print("Failed to add user: $error"));
+
       print(_account);
       print(_password);
       userCredentials = await FirebaseAuth.instance
@@ -202,37 +213,23 @@ class _creatAccountPage extends State<creatAccountPage> {
       User? user = userCredentials?.user;
       user?.updateDisplayName(_username);
     } on FirebaseAuthException catch (e) {
-      EasyLoading.dismiss();
-      if (e.code == 'weak-password') {
-        Fluttertoast.showToast(
-          backgroundColor: Colors.grey,
-          msg: "The password provided is too weak.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
-        setState(() {
-          error[2] = 'The password provided is too weak.';
-        });
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        Fluttertoast.showToast(
-          backgroundColor: Colors.grey,
-          msg: "The account already exists for that email.",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-        );
+      //EasyLoading.dismiss();
+      print('錯誤');
+      print(e.code);
+       if (e.code == 'email-already-in-use') {
+
         setState(() {
           error[1] = 'The account already exists for that email.';
         });
         print('The account already exists for that email.');
       }
     } catch (e) {
-      EasyLoading.dismiss();
+      //EasyLoading.dismiss();
       print(e);
     }
     print(userCredentials);
 
-    EasyLoading.dismiss();
+    //EasyLoading.dismiss();
     Fluttertoast.showToast(msg: "創建帳號成功");
 
     // Navigator.pop(context);
