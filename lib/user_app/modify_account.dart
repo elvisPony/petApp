@@ -205,7 +205,7 @@ class _ModifyAccount extends State<ModifyAccount> {
     AlertDialog dialog = AlertDialog(
       title: const Text("是否刪除帳號"),
       actions: [
-        ElevatedButton(
+        TextButton(
             onPressed: (){
               deleteAccount();
               
@@ -216,7 +216,7 @@ class _ModifyAccount extends State<ModifyAccount> {
                       builder: (context) => LoginPage()));
             },
             child: const Text("是")),
-        ElevatedButton(
+        TextButton(
             onPressed: (){
   
               Navigator.pop(context);

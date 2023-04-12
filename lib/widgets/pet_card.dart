@@ -141,7 +141,7 @@ class _pet_card extends State<pet_card> {
               child: Column(
                 children: [
                   //種族，文字框
-                  Text("種族："),
+                  Text("品種："),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
