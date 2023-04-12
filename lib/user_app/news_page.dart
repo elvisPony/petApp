@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_test/widgets/background-image.dart';
 import 'package:firebase_test/user_app/personal_user_index.dart';
-import 'package:firebase_test/widgets/news_wall.dart';
+import 'package:firebase_test/user_app/news_web.dart';
 
 const primaryColor = Color(0xFFedc96c);
 
@@ -11,6 +11,7 @@ class news_page extends StatelessWidget {
 
   final String account ;
   final String password ;
+
 
   const news_page({
   super.key,
@@ -42,7 +43,7 @@ class news_page extends StatelessWidget {
                 Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>  petIndex(
+                        builder: (context) => petIndex(
                           account: account,
                           password: password,
                         )));
@@ -56,40 +57,170 @@ class news_page extends StatelessWidget {
                   SizedBox(
                     height: 20,
                   ),
-
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    margin: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(
                       children: [
-                        Column(
-                          children: [
 
-                            news_wall(
-                              account: account,
-                              password: password,
-                              headText: "號誌桿「被狗狗尿斷」！警測出42倍尿素傻眼",
-                              bodyText: "這算是「滴水穿石」嗎？許多狗狗為了要佔地盤，都會專門跑到電線桿底下尿尿，日本先前傳出有一根號誌桿使用年限才不到一半，卻莫名其妙從根部斷裂，",
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                              primary: Colors.black,
+                              textStyle: const TextStyle(fontSize: 22),
                             ),
-
-                            SizedBox(
-                              height: 20,
-                            ),
-
-                            news_wall(
-                              account: account,
-                              password: password,
-                              headText: "號誌桿「被狗狗尿斷」！警測出42倍尿素傻眼",
-                              bodyText: "這算是「滴水穿石」嗎？許多狗狗為了要佔地盤，都會專門跑到電線桿底下尿尿，日本先前傳出有一根號誌桿使用年限才不到一半，卻莫名其妙從根部斷裂，",
-                            ),
-
-                          ],
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  WebViewApp(
+                                        account: account,
+                                        password: password,
+                                        url:"https://pets.ettoday.net",
+                                      )));
+                            },
+                            child: const Text('ETtoday寵物雲'),
+                          ),
                         ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                              primary: Colors.black,
+                              textStyle: const TextStyle(fontSize: 22),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  WebViewApp(
+                                        account: account,
+                                        password: password,
+                                        url:"https://udn.com/search/tagging/2/%E5%AF%B5%E7%89%A9",
+                                      )));
+                            },
+                            child: const Text('聯合新聞網 寵物專欄'),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                              primary: Colors.black,
+                              textStyle: const TextStyle(fontSize: 22),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  WebViewApp(
+                                        account: account,
+                                        password: password,
+                                        url:"https://www.setn.com/Catalog.aspx?PageGroupID=47",
+                                      )));
+                            },
+                            child: const Text('三立新聞網 寵物專欄'),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+
+
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                              primary: Colors.black,
+                              textStyle: const TextStyle(fontSize: 22),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  WebViewApp(
+                                        account: account,
+                                        password: password,
+                                        url:"https://tw.news.yahoo.com/topic/pets",
+                                      )));
+                            },
+                            child: const Text('yahoo新聞 毛宇宙'),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 10,
+                        ),
+
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade200,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0),
+                              primary: Colors.black,
+                              textStyle: const TextStyle(fontSize: 22),
+                            ),
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>  WebViewApp(
+                                        account: account,
+                                        password: password,
+                                        url:"https://www.chinatimes.com/search/%E5%AF%B5%E7%89%A9?chdtv",
+                                      )));
+                            },
+                            child: const Text('中時新聞網 寵物專欄'),
+                          ),
+                        ),
+
+
+
+
+
+
                       ],
                     ),
                   ),
-
-
-
                 ],
               ),
             ),

@@ -9,7 +9,7 @@ import 'package:firebase_test/user_app/pet_cards.dart';
 import 'package:firebase_test/user_app/pet_self_dect.dart';
 import 'package:firebase_test/user_app/modify_account.dart';
 import 'package:firebase_test/home_page/login_page.dart';
-import 'package:firebase_test/user_app/news_web.dart';
+
 
 
 const primaryColor = Color(0xFFedc96c);
@@ -77,7 +77,7 @@ class petIndex extends StatelessWidget {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) =>  WebViewApp(
+                                          builder: (context) =>  news_page(
                                             account: account,
                                             password: password,
                                           )));

@@ -1,14 +1,17 @@
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_test/widgets/navigation_controls.dart';
-import 'package:firebase_test/user_app/personal_user_index.dart';
+
+import 'package:firebase_test/user_app/news_page.dart';
 
 class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key,
-  required this.account, required this.password
-  });
   final String account;
   final String password;
+  final String url;
+  const WebViewApp({super.key,
+  required this.account, required this.password,
+    required this.url
+  });
 
   @override
   State<WebViewApp> createState() => _WebViewAppState();
@@ -22,7 +25,7 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
     controller = WebViewController()
       ..loadRequest(
-        Uri.parse('https://pets.ettoday.net'),
+        Uri.parse(widget.url),
       );
   }
 
@@ -38,7 +41,7 @@ class _WebViewAppState extends State<WebViewApp> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                  petIndex(
+                    news_page(
                     account: widget.account,
                     password: widget.password,
                 )));
