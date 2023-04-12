@@ -38,6 +38,7 @@ dependencies:
   flutter_easyloading: any
   fluttertoast: any
   provider: ^6.0.3
+  webview_flutter: ^4.0.7
 
 
   # The following adds the Cupertino Icons font to your application.

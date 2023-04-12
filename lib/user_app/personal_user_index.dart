@@ -9,6 +9,7 @@ import 'package:firebase_test/user_app/pet_cards.dart';
 import 'package:firebase_test/user_app/pet_self_dect.dart';
 import 'package:firebase_test/user_app/modify_account.dart';
 import 'package:firebase_test/home_page/login_page.dart';
+import 'package:firebase_test/user_app/news_web.dart';
 
 
 const primaryColor = Color(0xFFedc96c);
@@ -58,32 +59,32 @@ class petIndex extends StatelessWidget {
                         Column(
                           children: [
 
-                            // 最新新聞
-                            // Container(
-                            //   width: MediaQuery.of(context).size.width,
-                            //   decoration: BoxDecoration(
-                            //     color: Colors.blue.shade200,
-                            //     borderRadius: BorderRadius.circular(16),
-                            //   ),
-                            //   child: TextButton(
-                            //     style: TextButton.styleFrom(
-                            //       padding: const EdgeInsets.symmetric(
-                            //           vertical: 16.0),
-                            //       primary: Colors.black,
-                            //       textStyle: const TextStyle(fontSize: 22),
-                            //     ),
-                            //     onPressed: () {
-                            //       Navigator.pushReplacement(
-                            //           context,
-                            //           MaterialPageRoute(
-                            //               builder: (context) =>  news_page(
-                            //                 account: account,
-                            //                 password: password,
-                            //               )));
-                            //     },
-                            //     child: const Text('最新新聞'),
-                            //   ),
-                            // ),
+                            //最新新聞
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Colors.blue.shade200,
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0),
+                                  primary: Colors.black,
+                                  textStyle: const TextStyle(fontSize: 22),
+                                ),
+                                onPressed: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>  WebViewApp(
+                                            account: account,
+                                            password: password,
+                                          )));
+                                },
+                                child: const Text('最新新聞'),
+                              ),
+                            ),
 
                             SizedBox(
                               height: 10,
