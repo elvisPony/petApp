@@ -150,7 +150,7 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                   }
                   print("剩餘時間 : "+ settingTime.difference(nowTime).inMinutes.toString());
                   //deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);
-                  Timer(Duration(minutes: settingTime.difference(nowTime).inMinutes),
+                  Timer(Duration(minutes: settingTime.difference(nowTime).inMinutes,seconds: settingTime.difference(nowTime).inSeconds ),
                           () {deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);}
                   );
 
@@ -266,11 +266,11 @@ class _add_pet_note_page extends State<add_pet_note_page> {
 
       if ( user_data!.keys.toList().contains("pet_note_array") == false)
       {
-        users.update({"pet_note_array" : [data] });
+        await users.update({"pet_note_array" : [data] });
       }
       else {
         user_data["pet_note_array"].add(data);
-        users.update({"pet_note_array" :user_data["pet_note_array"] });
+        await users.update({"pet_note_array" :user_data["pet_note_array"] });
       }
 
 

@@ -158,11 +158,11 @@ class add_pet_card_page extends StatelessWidget {
 
     if ( user_data!.keys.toList().contains("pet_card_array") == false)
       {
-        users.update({"pet_card_array" : [data] });
+        await users.update({"pet_card_array" : [data] });
       }
     else {
       user_data["pet_card_array"].add(data);
-      users.update({"pet_card_array" :user_data["pet_card_array"] });
+      await users.update({"pet_card_array" :user_data["pet_card_array"] });
     }
 
 
