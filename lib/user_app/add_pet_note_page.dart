@@ -126,7 +126,8 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                       nowTime.month,
                       nowTime.day,
                       nowTime.hour,
-                      nowTime.minute
+                      nowTime.minute,
+                      nowTime.second
                   );
                   var settingTime = DateTime.utc(
                       int.parse(setYear.text)+1911,
@@ -134,7 +135,7 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                       int.parse(setDay.text),
                       int.parse(setHour.text),
                       int.parse(setMinute.text),
-                      0);
+                      0);// 0 是設定秒數
                   if(remind.remind){
                     await service.showScheduleNotification(
                       id: 0,
@@ -143,6 +144,8 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                       days: 0,
                       hours: 0,
                       minutes: settingTime.difference(nowTime).inMinutes,
+                      seconds: settingTime.difference(nowTime).inSeconds
+
                     );
                   }
                   print("剩餘時間 : "+ settingTime.difference(nowTime).inMinutes.toString());

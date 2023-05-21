@@ -93,7 +93,7 @@ class add_pet_card_page extends StatelessWidget {
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => petIndex(
+                          builder: (context) => my_pet_cards(
                             account: account,
                             password: password,
                           )));

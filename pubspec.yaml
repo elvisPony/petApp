@@ -53,7 +53,7 @@ dependencies:
   #  better_open_file: ^3.6.4
   image: ^3.2.2
   permission_handler: ^10.2.0
-  camera: ^0.9.3+1
+  camera: any
 
 dev_dependencies:
   flutter_test:

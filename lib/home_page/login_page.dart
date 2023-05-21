@@ -176,7 +176,7 @@ class LoginPage extends StatelessWidget {
       if (password['password'] != text2) {
       Fluttertoast.showToast(
         backgroundColor: Colors.grey,
-        msg: "Wrong password provided for that user.",
+        msg: "帳號或密碼錯誤，請重新輸入!",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.CENTER,
       );
