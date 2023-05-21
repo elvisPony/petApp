@@ -190,7 +190,9 @@ class _creatAccountPage extends State<creatAccountPage> {
       DocumentSnapshot doc = await users.doc(_account).get();
 
       if (doc.data() != null) {
-        Fluttertoast.showToast(msg: "這個信箱已被使用，請用其他信箱嘗試");
+        Fluttertoast.showToast(msg: "這個信箱已被使用，請用其他信箱嘗試",backgroundColor: Colors.grey,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER, );
         // Fluttertoast.showToast(
         //   backgroundColor: Colors.grey,
         //   msg: "信箱已使用，請用其他信箱嘗試",
@@ -230,7 +232,9 @@ class _creatAccountPage extends State<creatAccountPage> {
     print(userCredentials);
 
     //EasyLoading.dismiss();
-    Fluttertoast.showToast(msg: "創建帳號成功");
+    Fluttertoast.showToast(msg: "創建帳號成功",backgroundColor: Colors.grey,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,);
 
     // Navigator.pop(context);
   }
