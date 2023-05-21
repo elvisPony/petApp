@@ -144,13 +144,13 @@ class _add_pet_note_page extends State<add_pet_note_page> {
                       days: 0,
                       hours: 0,
                       minutes: settingTime.difference(nowTime).inMinutes,
-                      seconds: settingTime.difference(nowTime).inSeconds
+                      seconds: settingTime.difference(nowTime).inSeconds - (60 * settingTime.difference(nowTime).inMinutes)
 
                     );
                   }
                   print("剩餘時間 : "+ settingTime.difference(nowTime).inMinutes.toString());
                   //deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);
-                  Timer(Duration(minutes: settingTime.difference(nowTime).inMinutes,seconds: settingTime.difference(nowTime).inSeconds ),
+                  Timer(Duration(minutes: settingTime.difference(nowTime).inMinutes,seconds: settingTime.difference(nowTime).inSeconds -(60 * settingTime.difference(nowTime).inMinutes) ),
                           () {deleteNote(setYear.text,setMonth.text,setDay.text,setHour.text,setMinute.text);}
                   );
 
