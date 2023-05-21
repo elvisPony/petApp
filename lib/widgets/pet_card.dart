@@ -8,9 +8,10 @@ import 'package:firebase_test/widgets/SimpleCamera.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' show join;
 import 'package:path_provider/path_provider.dart';
+import 'package:flutter/cupertino.dart';
 
 class pet_card extends StatefulWidget {
-  const pet_card({
+   pet_card({
     Key? key,
     required this.petName,
     required this.petRace,
@@ -19,6 +20,8 @@ class pet_card extends StatefulWidget {
     required this.petLength,
     required this.petWeight,
     required this.remark,
+    this.erase = false,
+
   }) : super(key: key);
 
   final TextEditingController petName;
@@ -28,6 +31,8 @@ class pet_card extends StatefulWidget {
   final TextEditingController petLength;
   final TextEditingController petWeight;
   final TextEditingController remark;
+  bool erase;
+  bool eraseState = false;
 
   @override
   State<pet_card> createState() => _pet_card(
@@ -51,6 +56,7 @@ class _pet_card extends State<pet_card> {
     required this.petLength,
     required this.petWeight,
     required this.remark,
+
   });
 
   final TextEditingController petName;
@@ -60,6 +66,7 @@ class _pet_card extends State<pet_card> {
   final TextEditingController petLength;
   final TextEditingController petWeight;
   final TextEditingController remark;
+
 
   @override
   Widget build(BuildContext context) {
@@ -303,6 +310,11 @@ class _pet_card extends State<pet_card> {
                       color: Colors.grey.shade400,
                     ),
                   ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  deleteBtn(),
+
                 ],
               ),
             ),
@@ -310,6 +322,46 @@ class _pet_card extends State<pet_card> {
         ],
       ),
     );
+  }
+
+  Widget deleteBtn(){
+    if (widget.erase){
+      return //開啟提醒，文字加按鈕
+        Container(
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "刪除",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                flex: 3,
+              ),
+
+              Expanded(
+                child:  CupertinoSwitch(
+                  // This bool value toggles the switch.
+                  value: widget.eraseState,
+                  //thumbColor: CupertinoColors.systemBlue,
+                  //trackColor: CupertinoColors.systemRed.withOpacity(0.14),
+                  //activeColor: CupertinoColors.systemRed.withOpacity(0.64),
+                  onChanged: (bool? value) {
+                    // This is called when the user toggles the switch.
+                    setState(() {
+                      widget.eraseState = value!;
+                    });
+                  },
+                ),
+                flex: 1,
+              ),
+            ],
+          ),
+        );
+    }
+    return const SizedBox();
   }
 
   Future<Image> _getAvatar() async {
